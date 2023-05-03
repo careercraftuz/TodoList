@@ -49,5 +49,30 @@ def delete_task(request, id:int):
             return Response({'result':'Task deleted'})
         except:
             return Response({'result':'Task not found'})
+        
+@api_view(['POST'])
+def update_task(request, id:int):
+    if request.method == 'POST':
+        try:
+            task=Task.objects.get(id=id)
+        except:
+            return Response({'result':'Task not found'})
+        updated = False
+        if request.data.get('name'):
+            updated = True
+            task.name=request.data['name']
+        if request.data.get('description'):
+            updated = True
+            task.description=request.data['description']
+        if request.data.get('status'):
+            updated = True
+            task.status=request.data['status']
+        task.save()
+
+        if updated:
+            return Response({'result':'Task updated'})
+        return Response({'result':'You must to send at least one field'})
+
+        
 
 
