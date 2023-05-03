@@ -8,6 +8,6 @@ from api.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('tasks/', get_all_tasks)
+    path('tasks/', get_all_tasks),
     path('task/<int:id>', get_task)
 ]
