@@ -7,6 +7,16 @@ from .models import Task
 def get_all_tasks(request:Request):
     if request.method == "GET":
         tasks=Task.objects.all()
-        return Response({'tasks':tasks})
+        result={'result':[]}
+        for task in tasks:
+            result['result'].append({
+                'id':task.id,
+                'name':task.name,
+                'description':task.description,
+                'status':task.status,
+                'created':task.created,
+                'updated':task.updated
+            })
+        return Response(result)
     else:
         return Response({'result':'Wrong method'})
