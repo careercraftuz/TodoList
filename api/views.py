@@ -22,7 +22,7 @@ def get_all_tasks(request:Request):
         return Response({'result':'Wrong method'})
 
 @api_view(['GET'])
-def get_task(request,id:int):
+def get_task(request, id:int):
     if request.method == 'GET':
         try:
             task=Task.objects.get(id=id)
@@ -39,4 +39,15 @@ def get_task(request,id:int):
         except:
             return Response({'result':'Task not found'})
         
+
+@api_view(['GET'])
+def delete_task(request, id:int):
+    if request.method == 'GET':
+        try:
+            task=Task.objects.get(id=id)
+            task.delete()
+            return Response({'result':'Task deleted'})
+        except:
+            return Response({'result':'Task not found'})
+
 
