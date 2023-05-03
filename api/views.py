@@ -23,7 +23,7 @@ def get_all_tasks(request:Request):
         return Response({'result':'Wrong method'})
 
 @api_view(['GET'])
-def get_task(request,id:int):
+def get_task(request, id:int):
     if request.method == 'GET':
         try:
             task=Task.objects.get(id=id)
@@ -40,6 +40,43 @@ def get_task(request,id:int):
         except:
             return Response({'result':'Task not found'})
         
+
+
+@api_view(['GET'])
+def delete_task(request, id:int):
+    if request.method == 'GET':
+        try:
+            task=Task.objects.get(id=id)
+            task.delete()
+            return Response({'result':'Task deleted'})
+        except:
+            return Response({'result':'Task not found'})
+        
+@api_view(['POST'])
+def update_task(request, id:int):
+    if request.method == 'POST':
+        try:
+            task=Task.objects.get(id=id)
+        except:
+            return Response({'result':'Task not found'})
+        updated = False
+        if request.data.get('name'):
+            updated = True
+            task.name=request.data['name']
+        if request.data.get('description'):
+            updated = True
+            task.description=request.data['description']
+        if request.data.get('status'):
+            updated = True
+            task.status=request.data['status']
+        task.save()
+
+        if updated:
+            return Response({'result':'Task updated'})
+        return Response({'result':'You must to send at least one field'})
+
+        
+
 @api_view(['POST'])
 def create_task(request):
     if request.method == 'POST':
@@ -55,3 +92,4 @@ def create_task(request):
         except:
             return Response({'result':'bad request'},status=status.HTTP_400_BAD_REQUEST)
     return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
