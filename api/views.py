@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Task
 
+
 @api_view(["GET"])
 def get_all_tasks(request:Request):
     if request.method == "GET":
@@ -22,6 +23,7 @@ def get_all_tasks(request:Request):
     else:
         return Response({'result':'Wrong method'})
 
+
 @api_view(['GET'])
 def get_task(request, id:int):
     if request.method == 'GET':
@@ -39,7 +41,6 @@ def get_task(request, id:int):
             return Response(result)
         except:
             return Response({'result':'Task not found'})
-        
 
 
 @api_view(['GET'])
@@ -52,6 +53,7 @@ def delete_task(request, id:int):
         except:
             return Response({'result':'Task not found'})
         
+
 @api_view(['POST'])
 def update_task(request, id:int):
     if request.method == 'POST':
@@ -75,7 +77,6 @@ def update_task(request, id:int):
             return Response({'result':'Task updated'})
         return Response({'result':'You must to send at least one field'})
 
-        
 
 @api_view(['POST'])
 def create_task(request):
@@ -92,4 +93,3 @@ def create_task(request):
         except:
             return Response({'result':'bad request'},status=status.HTTP_400_BAD_REQUEST)
     return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
