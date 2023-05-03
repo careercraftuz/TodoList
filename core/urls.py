@@ -6,7 +6,8 @@ from api.views import (
     get_task,
     delete_task,
     update_task,
-    create_task
+    create_task,
+    update_task
 )
 
 urlpatterns = [
@@ -14,6 +15,6 @@ urlpatterns = [
     path('tasks/', get_all_tasks),
     path('tasks/<int:id>', get_task),
     path('tasks/<int:id>/delete', delete_task),
-    path('tasks/<int:id>/update', update_task),
     path('create-task/',create_task),
+    path('tasks/<int:id>/update', update_task),
 ]
