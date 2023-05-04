@@ -29,16 +29,14 @@ def get_task(request, id:int):
     if request.method == 'GET':
         try:
             task=Task.objects.get(id=id)
-            result={'result':[]}
-            result['result'].append({
+            return {
                 'id':task.id,
                 'name':task.name,
                 'description':task.description,
                 'status':task.status,
                 'created':task.created,
                 'updated':task.updated
-            })
-            return Response(result)
+            }
         except:
             return Response({'result':'Task not found'})
 
@@ -75,14 +73,12 @@ def create_task(request):
 def update_task(request,id:int):
     if request.method == 'POST':
         try:
-            task = Task.objects.get(id=id)
+            task=Task.objects.get(id=id)
             try:
                 data=request.data
-                task.update(
-                    name=data.get('name',task.name),
-                    description=data.get('description',task.description),
-                    status=data.get('status',task.status)
-                )
+                task.name=data.get('name',task.name)
+                task.description=data.get('description',task.description)
+                task.status=data.get('status',task.status)
                 task.save()
                 return Response({'result':'Task updated'},status=status.HTTP_200_OK)
             except Exception as e:
