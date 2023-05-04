@@ -19,7 +19,9 @@ def get_all_tasks(request:Request):
                 'created':task.created,
                 'updated':task.updated
             })
-        return Response(result)
+            
+        return Response({'result':result})
+   
     else:
         return Response({'result':'Wrong method'})
 
