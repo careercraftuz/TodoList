@@ -10,7 +10,7 @@
 | GET | /api/tasks/<int:id> | Get a todo task by id |
 | POST | /api/tasks/<int:id>/delete | Delete a todo task by id |
 | POST | /api/tasks/<int:id>/update | Update a todo task by id |
-| POST | /api/tasks/create-task/ | Create a todo task |
+| POST | /api/create-task/ | Create a todo task |
 
 ### GET /api/tasks/
 
