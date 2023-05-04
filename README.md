@@ -1,6 +1,7 @@
 # TodoList
 
 ## Database Design
+Here is a sample schema for our Todo List app's database:
 
 ## Api Design
 
@@ -52,14 +53,12 @@ get a todo task by id
 
 ```json
 {
-    "result": {
-        "id": 1,
-        "name": "task 01",
-        "description": "task description",
-        "status": false,
-        "created": "2023-05-04T05:07:40.069249Z",
-        "updated": "2023-05-04T05:07:40.069285Z"
-    }
+    "id": 1,
+    "name": "task 01",
+    "description": "task description",
+    "status": false,
+    "created": "2023-05-04T05:07:40.069249Z",
+    "updated": "2023-05-04T05:07:40.069285Z"
 }
 ```
 
