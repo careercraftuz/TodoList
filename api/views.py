@@ -43,7 +43,7 @@ def get_task(request, id:int):
             return Response({'result':'Task not found'})
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def delete_task(request, id:int):
     if request.method == 'GET':
         try:
