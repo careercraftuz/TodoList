@@ -67,8 +67,8 @@ def create_task(request):
             )
             object.save()
             return Response({'result':'created'},status=status.HTTP_201_CREATED)
-        except:
-            return Response({'result':'bad request'},status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'result':f'bad request {e}'},status=status.HTTP_400_BAD_REQUEST)
     return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(['POST'])
@@ -85,8 +85,8 @@ def update_task(request,id:int):
                 )
                 task.save()
                 return Response({'result':'Task updated'},status=status.HTTP_200_OK)
-            except:
-                return Response({'result':'Bad request'},status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                return Response({'result':f'Bad request {e}'},status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response({'result':'Not found task'},status=status.HTTP_404_NOT_FOUND)
     else:
