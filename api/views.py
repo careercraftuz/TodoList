@@ -79,7 +79,7 @@ def update_task(request,id:int):
                 data=request.data
                 task.name = data.get('name',task.name)
                 task.description = data.get('description',task.description)
-                data.status = data.get('status',task.status)
+                task.status = data.get('status',task.status)
 
                 task.save()
                 return Response({'result':'Task updated'},status=status.HTTP_200_OK)
