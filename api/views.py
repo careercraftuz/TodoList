@@ -54,29 +54,6 @@ def delete_task(request, id:int):
             return Response({'result':'Task not found'})
         
 
-@api_view(['POST'])
-def update_task(request, id:int):
-    if request.method == 'POST':
-        try:
-            task=Task.objects.get(id=id)
-        except:
-            return Response({'result':'Task not found'})
-        updated = False
-        if request.data.get('name'):
-            updated = True
-            task.name=request.data['name']
-        if request.data.get('description'):
-            updated = True
-            task.description=request.data['description']
-        if request.data.get('status'):
-            updated = True
-            task.status=request.data['status']
-        task.save()
-
-        if updated:
-            return Response({'result':'Task updated'})
-        return Response({'result':'You must to send at least one field'})
-
 
 @api_view(['POST'])
 def create_task(request):
@@ -93,3 +70,26 @@ def create_task(request):
         except:
             return Response({'result':'bad request'},status=status.HTTP_400_BAD_REQUEST)
     return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['POST'])
+def update_task(request,id:int):
+    if request.method == 'POST':
+        try:
+            task = Task.objects.get(id=id)
+            try:
+                data=request.data
+                task.update(
+                    name=data.get('name',task.name),
+                    description=data.get('description',task.description),
+                    status=data.get('status',task.status)
+                )
+                task.save()
+                return Response({'result':'Task updated'},status=status.HTTP_200_OK)
+            except:
+                return Response({'result':'Bad request'},status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'result':'Not found task'},status=status.HTTP_404_NOT_FOUND)
+    else:
+        return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
