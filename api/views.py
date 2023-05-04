@@ -43,17 +43,17 @@ def get_task(request, id:int):
             return Response({'result':'Task not found'})
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def delete_task(request, id:int):
-    if request.method == 'GET':
+    if request.method == 'POST':
         try:
             task=Task.objects.get(id=id)
             task.delete()
             return Response({'result':'Task deleted'})
         except:
             return Response({'result':'Task not found'})
+    return Response({'result':'Wrong method'})
         
-
 
 @api_view(['POST'])
 def create_task(request):
