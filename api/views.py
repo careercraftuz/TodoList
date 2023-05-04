@@ -51,8 +51,6 @@ def delete_task(request, id:int):
         except:
             return Response({'result':'Task not found'})
         
-
-
 @api_view(['POST'])
 def create_task(request):
     if request.method == 'POST':
@@ -87,5 +85,3 @@ def update_task(request,id:int):
             return Response({'result':'Not found task'},status=status.HTTP_404_NOT_FOUND)
     else:
         return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
