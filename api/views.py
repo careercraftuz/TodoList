@@ -29,15 +29,15 @@ def get_task(request, id:int):
     if request.method == 'GET':
         try:
             task=Task.objects.get(id=id)
-            result={'result':[]}
-            result['result'].append({
+            
+            result = {
                 'id':task.id,
                 'name':task.name,
                 'description':task.description,
                 'status':task.status,
                 'created':task.created,
                 'updated':task.updated
-            })
+            }
             return Response(result)
         except:
             return Response({'result':'Task not found'})
