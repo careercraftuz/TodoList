@@ -78,11 +78,9 @@ def update_task(request,id:int):
             task = Task.objects.get(id=id)
             try:
                 data=request.data
-                task.update(
-                    name=data.get('name',task.name),
-                    description=data.get('description',task.description),
-                    status=data.get('status',task.status)
-                )
+                task.name=data.get('name',task.name)
+                task.description=data.get('description',task.description)
+                task.status=data.get('status',task.status)
                 task.save()
                 return Response({'result':'Task updated'},status=status.HTTP_200_OK)
             except Exception as e:
