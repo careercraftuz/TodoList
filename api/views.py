@@ -77,7 +77,7 @@ def update_task(request,id:int):
             task = Task.objects.get(id=id)
             try:
                 data=request.data
-                task.update(
+                task = Task(
                     name=data.get('name',task.name),
                     description=data.get('description',task.description),
                     status=data.get('status',task.status)
