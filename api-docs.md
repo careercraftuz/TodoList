@@ -2,63 +2,19 @@
 
 ### GET /api/tasks/
 
-get all todo tasks
-
-#### Response
-
-```json
-{
-    "result": [
-        {
-            "id": 1,
-            "name": "task 01",
-            "description": "task description",
-            "status": false,
-            "created": "2023-05-04T05:07:40.069249Z",
-            "updated": "2023-05-04T05:07:40.069285Z"
-        }
-    ]
-}
-```
-
-response attributes:
-
-| Attribute | Type | Description |
-| --- | --- | --- |
-| id | int | task id |
-| name | string | task name |
-| description | string | task description |
-| status | bool | task status |
-| created | datetime | task created time |
-| updated | datetime | task updated time |
+Use this to get all todo tasks. Returns a list of [Task](types.md#task) object.
 
 ### GET /api/tasks/<int:id>
 
-get a todo task by id
+Use this to get a todo task by id. Returns a [Task](types.md#task) object.
 
-#### Response
+#### Request
 
-```json
-{
-    "id": 1,
-    "name": "task 01",
-    "description": "task description",
-    "status": false,
-    "created": "2023-05-04T05:07:40.069249Z",
-    "updated": "2023-05-04T05:07:40.069285Z"
-}
-```
-
-response attributes:
+resquest url params:
 
 | Attribute | Type | Description |
 | --- | --- | --- |
 | id | int | task id |
-| name | string | task name |
-| description | string | task description |
-| status | bool | task status |
-| created | datetime | task created time |
-| updated | datetime | task updated time |
 
 ### POST /api/tasks/<int:id>/delete
 
@@ -82,7 +38,7 @@ resquest url params:
 
 ### POST /api/tasks/<int:id>/update
 
-update a todo task by id
+update a todo task by id. Returns an updated [Task](types.md#task) object.
 
 #### Request
 
@@ -104,41 +60,15 @@ request body:
 
 request body attributes:
 
-| Attribute | Type | Description |
-| --- | --- | --- |
-| name | string | task name |
-| description | string | task description |
-| status | bool | task status |
-
-#### Response
-
-```json
-{
-    "result": {
-        "id": 1,
-        "name": "task 01",
-        "description": "task description",
-        "status": false,
-        "created": "2023-05-04T05:07:40.069249Z",
-        "updated": "2023-05-04T05:07:40.069285Z"
-    }
-}
-```
-
-response attributes:
-
-| Attribute | Type | Description |
-| --- | --- | --- |
-| id | int | task id |
-| name | string | task name |
-| description | string | task description |
-| status | bool | task status |
-| created | datetime | task created time |
-| updated | datetime | task updated time |
+| Attribute | Type | Required | Description |
+| --- | --- | --- | --- |
+| name | string | no | task name |
+| description | string | no | task description |
+| status | bool | no | task status |
 
 ### POST /api/create-task/
 
-create a todo task
+create a todo task. Returns a [Task](types.md#task) object.
 
 #### Request
 
@@ -154,11 +84,11 @@ request body:
 
 request body attributes:
 
-| Attribute | Type | Description |
-| --- | --- | --- |
-| name | string | task name |
-| description | string | task description |
-| status | bool | task status |
+| Attribute | Type | Required | Description |
+| --- | --- | --- | --- |
+| name | string | yes | task name |
+| description | string | yes | task description |
+| status | bool | yes | task status |
 
 #### Response
 
