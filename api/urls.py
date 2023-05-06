@@ -14,4 +14,5 @@ urlpatterns = [
     path('tasks/<int:id>/delete', delete_task),
     path('tasks/<int:id>/update', update_task),
     path('create-task/',create_task),
+    path('register/')
 ]
