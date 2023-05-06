@@ -104,6 +104,15 @@ def create_token(requset:Request):
 
         user = User.objects.create(username=username,password=make_password(password))
         token = Token.objects.create(user = user)
-        print(type(token))
         return Response({'token':token.key})
-        
+    
+
+@api_view(['POST'])
+def login_user(requset:Request):
+    data = requset.data
+    username = data.get('username')
+    password = data.get('password')
+    if User.objects.filter(username = username):
+        user = User.objects.get(username=username,password=password)
+        token = Token.objects.create(user = user)
+        return Response({'token':token.key})
