@@ -6,11 +6,11 @@ Todo List is an open source project that enable users manage users tasks and als
 
 ### Project Support Features
 
-* Public (non-authenticated) users can access all tasks on the platform.
-* Public (non-authenticated) users can view details of a single task.
-* Public (non-authenticated) users can create a task on the platform.
-* Public (non-authenticated) users can delete a task on the platform.
-* Public (non-authenticated) users can update a task on the platform.
+* Private (authenticated) users can access all tasks on the platform.
+* Private (authenticated) users can view details of a single task.
+* Private (authenticated) users can create a task on the platform.
+* Private (authenticated) users can delete a task on the platform.
+* Private (authenticated) users can update a task on the platform.
 
 ### Installation Guide
 
@@ -29,6 +29,16 @@ Todo List is an open source project that enable users manage users tasks and als
 * you can find the available types [here](types.md).
 
 ### API Endpoints
+
+user authentication endpoints
+
+| HTTP Verbs | Endpoints | Action |
+| --- | --- | --- |
+| POST | /api/login/ | Login a user |
+| POST | /api/logout/ | Logout a user |
+| POST | /api/register/ | Register a user |
+
+todo task endpoints
 
 | HTTP Verbs | Endpoints | Action |
 | --- | --- | --- |
