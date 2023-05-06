@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from .models import Task
 from rest_framework.authtoken.models import Token
@@ -101,9 +102,30 @@ def create_token(requset:Request):
     if User.objects.filter(username = username):
         return Response({"return":"Such a user exists"})
     else:
-
         user = User.objects.create(username=username,password=make_password(password))
         token = Token.objects.create(user = user)
-        print(type(token))
         return Response({'token':token.key})
-        
+    
+
+class LoginUser(APIView):
+    def post(self, request: Request) -> Response:
+        user = request.user
+        if user:
+            token = Token.objects.filter(user=user)
+            if token is not None:
+                token.delete()
+            token = Token.objects.create(user=user)
+            return Response({"token": token.key}, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+
+
+
+
+
+
