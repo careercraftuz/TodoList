@@ -3,6 +3,9 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Task
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 
 @api_view(["GET"])
@@ -91,3 +94,19 @@ def update_task(request,id:int):
         return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+@api_view(['POST'])
+def register(request):
+    password = request.data.get('password')
+    username = request.data.get('username')
+    try:
+        user = User.objects.get(username=username)
+        if user.check_password(password):
+            return Response({'result': 'Alredy checking user'})
+        else:
+            return Response({'result':'No checking user'})
+    except:
+        user=User.objects.create(username=username,password=make_password(password))
+        user.save()
+        token= Token.objects.create(user=user)
+        content = {'token': token.key}
+        return Response(content)
