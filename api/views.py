@@ -5,6 +5,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from .models import Task
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.hashers import make_password
 
 @api_view(["GET"])
 def get_all_tasks(request:Request):
@@ -97,11 +98,12 @@ def create_token(requset:Request):
     data = requset.data
     username = data.get('username')
     password = data.get('password')
-    if User.objects.get(username = username):
+    if User.objects.filter(username = username):
         return Response({"return":"Such a user exists"})
     else:
 
-        user = User.objects.create(username=username,password=password)
+        user = User.objects.create(username=username,password=make_password(password))
         token = Token.objects.create(user = user)
+        print(type(token))
         return Response({'token':token.key})
         
