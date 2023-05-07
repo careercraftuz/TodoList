@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import APIView
 from .models import Task
 from rest_framework.authtoken.models import Token
+from django.contrib import auth
 
 
 @api_view(["GET"])
@@ -99,4 +100,14 @@ class LoginUser(APIView):
             token.delete()
             create_token=Token.objects.create(user=user)
             return Response({"new_token":create_token.key},status=status.HTTP_201_CREATED)
-
+class Logoutuser(APIView):
+    def delete(self,request:Request)->Response:
+        user=request.user
+        if user:
+            token = Token.objects.get(user=user)
+            token.delete()
+            auth.logout(request)
+            data={
+                "result":"you logged out"
+            }
+            return Response(data=data, status=status.HTTP_200_OK)
