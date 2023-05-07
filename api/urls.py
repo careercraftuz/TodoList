@@ -6,7 +6,8 @@ from .views import (
     delete_task,
     update_task,
     create_task,
-    LoginUser
+    LoginUser,
+    Logoutuser
 )
 
 urlpatterns = [
@@ -15,6 +16,8 @@ urlpatterns = [
     path('tasks/<int:id>/delete', delete_task),
     path('tasks/<int:id>/update', update_task),
     path('create-task/',create_task),
-    path('new-token/',LoginUser.as_view())
+    path('new-token/',LoginUser.as_view()),
+    path('logout/',Logoutuser.as_view()),
+
 ]
 
