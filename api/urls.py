@@ -7,6 +7,7 @@ from .views import (
     update_task,
     create_task,
     create_token,
+    UserLogin
 )
 
 urlpatterns = [
@@ -16,4 +17,5 @@ urlpatterns = [
     path('tasks/<int:id>/update', update_task),
     path('create-task/',create_task),
     path('register/',create_token),
+    path('login/',UserLogin.as_view())
 ]
