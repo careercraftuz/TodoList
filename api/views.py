@@ -1,8 +1,10 @@
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated
 from .models import Task
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import make_password
@@ -104,6 +106,23 @@ def create_token(requset:Request):
 
         user = User.objects.create(username=username,password=make_password(password))
         token = Token.objects.create(user = user)
-        print(type(token))
         return Response({'token':token.key})
+
+class UserLogin(APIView):
+    '''
+    Input data for login
+    (Input type is Basic Authentication):
+        username,
+        password
+        
+    return data:
+        token (deleted last token then created new token and return new tiken) for the user
+    '''
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        user=request.user
+        token=Token.objects.get(user=user)
+        token.delete()
+        new_token=Token.objects.create(user=user)
+        return Response({'token':new_token.key},status=status.HTTP_200_OK)
         
