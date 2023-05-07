@@ -27,22 +27,22 @@ def get_all_tasks(request:Request):
         return Response({'result':'Wrong method'})
 
 
-@api_view(['GET'])
-def get_task(request, id:int):
-    if request.method == 'GET':
-        try:
-            task=Task.objects.get(id=id)
-            result={
-                'id':task.id,
-                'name':task.name,
-                'description':task.description,
-                'status':task.status,
-                'created':task.created,
-                'updated':task.updated
-            }
-            return Response(result)
-        except:
-            return Response({'result':'Task not found'})
+class Get_task(APIView):   
+    def GET(request:Request, id:int):
+            user= request.user
+            try:
+                task=Task.objects.filter(user=user,id=id)
+                result={
+                    'id':task.id,
+                    'name':task.name,
+                    'description':task.description,
+                    'status':task.status,
+                    'created':task.created,
+                    'updated':task.updated
+                }
+                return Response(result)
+            except:
+                return Response({'result':'Task not found'})
 
 
 @api_view(['POST'])
