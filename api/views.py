@@ -2,7 +2,9 @@ from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import APIView
 from .models import Task
+from rest_framework.authtoken.models import Token
 
 
 @api_view(["GET"])
@@ -89,5 +91,12 @@ def update_task(request,id:int):
             return Response({'result':'Not found task'},status=status.HTTP_404_NOT_FOUND)
     else:
         return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
+class LoginUser(APIView):
+    def put(self,request:Request)->Response:
+        user = request.user
+        if user:
+            token = Token.objects.get(user=user)
+            token.delete()
+            create_token=Token.objects.create(user=user)
+            return Response({"new_token":create_token.key},status=status.HTTP_201_CREATED)
 
