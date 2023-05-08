@@ -62,6 +62,6 @@ todo task endpoints
 
 ### Current Comtributors
 
-<a href="https://github.com/carecraftuz/TodoList/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=carecraftuz/TodoList"/>
+<a href="https://github.com/careercraftuz/TodoList/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=careercraftuz/TodoList"/>
 </a>
