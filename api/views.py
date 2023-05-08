@@ -71,25 +71,27 @@ class CreateTask:
             return Response({'result':f'bad request {e}'},status=status.HTTP_400_BAD_REQUEST)
         
 
-@api_view(['POST'])
-def update_task(request,id:int): 
-    if request.method == 'POST':
+class UpdateTask:
+        
+    def update_task(request:Request,id:int)->Response: 
+        user = request.user
         try:
-            task = Task.objects.get(id=id)
-            try:
-                data=request.data
-                task.name = data.get('name',task.name)
-                task.description = data.get('description',task.description)
-                task.status = data.get('status',task.status)
-
-                task.save()
-                return Response({'result':'Task updated'},status=status.HTTP_200_OK)
-            except Exception as e:
-                return Response({'result':f'Bad request {e}'},status=status.HTTP_400_BAD_REQUEST)
+                task = Task.objects.filter(user=user).all()
+                task = Task.objects.get(id=id)
+                try:
+                    data = request.data
+                    serializer = TaskSerializer(task, data=data, partial=True)
+                    if serializer.is_valid():
+                        serializer.save()
+                    
+                    return Response({'result':serializer.data},status=status.HTTP_200_OK)
+                except Exception as e:
+                    return Response({'result':f'Bad request {e}'},status=status.HTTP_400_BAD_REQUEST)
+                
         except:
-            return Response({'result':'Not found task'},status=status.HTTP_404_NOT_FOUND)
-    else:
-        return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+                return Response({'result':'Not found task'},status=status.HTTP_404_NOT_FOUND)
+        
+           
 class LoginUser(APIView):
     def put(self,request:Request)->Response:
         user = request.user
