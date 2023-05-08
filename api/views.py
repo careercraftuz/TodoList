@@ -42,10 +42,11 @@ class Get_task(APIView):
 
 
 class DeleteTask:
+    permissions_classes =[IsAuthenticated]
     def delete(request:Request, id:int):
         user=request.user
         try:
-                task=Task.objects.get(id=id)
+                task=Task.objects.get(user=user,id=id)
                 task.delete()
                 return Response({'result':'Task deleted'})
         except:
