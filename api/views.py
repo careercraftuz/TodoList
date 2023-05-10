@@ -3,10 +3,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from django.contrib.auth.models import User
-from .models import Task
 from rest_framework.authtoken.models import Token
+from rest_framework.authentication import TokenAuthentication
+
+from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from .models import Task
 
 @api_view(["GET"])
 def get_all_tasks(request:Request):
@@ -108,6 +110,7 @@ def create_token(requset:Request):
     
 
 class LoginUser(APIView):
+    authentication_classes = [TokenAuthentication,]
     def post(self, request: Request) -> Response:
         user = request.user
         if user:
