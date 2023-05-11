@@ -61,22 +61,6 @@ def delete_task(request, id:int):
         
 
 
-@api_view(['POST'])
-def create_task(request):
-    if request.method == 'POST':
-        try:
-            task=request.data
-            object=Task.objects.create(
-                name=task['name'],
-                description=task['description'],
-                status=task['status']
-            )
-            object.save()
-            return Response({'result':'created'},status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response({'result':f'bad request {e}'},status=status.HTTP_400_BAD_REQUEST)
-    return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 class UserCreateTask(APIView):
     authentication_classes = [TokenAuthentication]
     def post(self, request):

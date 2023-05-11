@@ -1,11 +1,9 @@
 
 from django.urls import path
 from .views import (
-    get_all_tasks,
     get_task,
     delete_task,
     update_task,
-    create_task,
     create_token,
     Login,
     UserTasks,
