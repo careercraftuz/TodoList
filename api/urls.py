@@ -8,14 +8,15 @@ from .views import (
     create_task,
     create_token,
     Login,
-    UserTasks
+    UserTasks,
+    UserCreateTask
 )
 
 urlpatterns = [
     path('tasks/<int:id>', get_task),
     path('tasks/<int:id>/delete', delete_task),
     path('tasks/<int:id>/update', update_task),
-    path('create-task/',create_task),
+    path('create-task/',UserCreateTask.as_view()),
     path('register/',create_token),
     path('login/',Login.as_view()),
     path('tasks/',UserTasks.as_view()),

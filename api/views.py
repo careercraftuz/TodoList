@@ -77,6 +77,25 @@ def create_task(request):
             return Response({'result':f'bad request {e}'},status=status.HTTP_400_BAD_REQUEST)
     return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+class UserCreateTask(APIView):
+    authentication_classes = [TokenAuthentication]
+    def post(self, request):
+        user=request.user
+        try:
+            task=request.data
+            object=Task.objects.create(
+                name=task['name'],
+                description=task['description'],
+                status=task['status']
+                user=user
+            )
+            object.save()
+            return Response({'result':'created'},status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'result':f'bad request {e}'},status=status.HTTP_400_BAD_REQUEST)
+
+
+
 @api_view(['POST'])
 def update_task(request,id:int):
     if request.method == 'POST':
