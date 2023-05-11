@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from .models import Task
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.hashers import make_password
 
 @api_view(["GET"])
@@ -121,3 +122,15 @@ class Login(APIView):
             token = Token.objects.create(user=user)
 
         return Response({"token":token.key})
+    
+
+class Logout(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request: Request) -> Response:
+        token = request.auth
+        token.delete()
+        return Response({"Status": "Deleted succesfully"})
+    
+
