@@ -14,7 +14,7 @@ from django.contrib.auth.hashers import make_password
 class UserTasks(APIView):
     #Added Tokenauthorization
     authentication_classes = [TokenAuthentication]
-    
+
     def get(self, request):
         user=request.user
         tasks=Task.objects.filter(user=user)
@@ -50,15 +50,17 @@ class TaskDetailView(APIView):
             return Response({"Error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['POST'])
-def delete_task(request, id:int):
-    if request.method == 'POST':
+class DeleteTask(APIView):
+    permission_classes = [IsAuthenticated,]
+    authentication_classes = [TokenAuthentication,]  
+
+    def post(self, request: Request, id):
         try:
             task=Task.objects.get(id=id)
             task.delete()
-            return Response({'result':'Task deleted'})
+            return Response({'result':'Task deleted'}, status=status.HTTP_202_ACCEPTED)
         except:
-            return Response({'result':'Task not found'})
+            return Response({'result':'Task not found'}, status=status.HTTP_404_NOT_FOUND)
         
 
 class UserCreateTask(APIView):
