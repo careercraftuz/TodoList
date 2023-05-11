@@ -30,13 +30,12 @@ class UserTasks(APIView):
         return Response(result)
 
 
-
-@api_view(['GET'])
-def get_task(request, id:int):
-    if request.method == 'GET':
-        try:
-            task=Task.objects.get(id=id)
-            result={
+class UserTaskid(APIView):
+    authentication_classes = [TokenAuthentication]
+    def get(self, request,id:int):
+        user=request.user
+        task=Task.objects.filter(user=user,id=id)
+        result={
                 'id':task.id,
                 'name':task.name,
                 'description':task.description,
@@ -44,10 +43,7 @@ def get_task(request, id:int):
                 'created':task.created,
                 'updated':task.updated
             }
-            return Response(result)
-        except:
-            return Response({'result':'Task not found'})
-
+        return Response(result)
 
 @api_view(['POST'])
 def delete_task(request, id:int):
