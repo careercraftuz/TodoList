@@ -1,12 +1,16 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes,authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from .models import Task
 from rest_framework.authtoken.models import Token
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
-
+import base64
+permission_classes = ([IsAuthenticated])
 @api_view(["GET"])
 def get_all_tasks(request:Request):
     if request.method == "GET":
@@ -106,4 +110,18 @@ def create_token(requset:Request):
         token = Token.objects.create(user = user)
         print(type(token))
         return Response({'token':token.key})
-        
+
+class Login(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request:Request):
+        user = request.user
+        token_filter =  Token.objects.filter(user = user)
+        if token_filter:
+            token_filter.delete()
+            token = Token.objects.create(user = user)
+        else:
+            user = request.user
+            token = Token.objects.create(user=user)
+
+        return Response({"token":token.key})
