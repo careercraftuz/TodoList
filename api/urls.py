@@ -1,14 +1,14 @@
 
 from django.urls import path
 from .views import (
-    get_all_tasks,
     get_task,
     delete_task,
     update_task,
     create_task,
     create_token,
     Login,
-    UserTasks
+    Logout,
+    UserTasks,
 )
 
 urlpatterns = [
@@ -18,5 +18,6 @@ urlpatterns = [
     path('create-task/',create_task),
     path('register/',create_token),
     path('login/',Login.as_view()),
+    path('logout/',Logout.as_view()),
     path('tasks/',UserTasks.as_view()),
 ]
