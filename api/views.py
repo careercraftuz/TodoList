@@ -6,15 +6,17 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from .models import Task
 from rest_framework.authtoken.models import Token
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
+#import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.hashers import make_password
-import base64
-permission_classes = ([IsAuthenticated])
-@api_view(["GET"])
-def get_all_tasks(request:Request):
-    if request.method == "GET":
-        tasks=Task.objects.all()
+    
+class UserTasks(APIView):
+    #Added Tokenauthorization
+    authentication_classes = [TokenAuthentication]
+    def get(self, request):
+        user=request.user
+        tasks=Task.objects.filter(user=user)
         result={'result':[]}
         for task in tasks:
             result['result'].append({
@@ -26,8 +28,7 @@ def get_all_tasks(request:Request):
                 'updated':task.updated
             })
         return Response(result)
-    else:
-        return Response({'result':'Wrong method'})
+
 
 
 @api_view(['GET'])
@@ -108,7 +109,6 @@ def create_token(requset:Request):
 
         user = User.objects.create(username=username,password=make_password(password))
         token = Token.objects.create(user = user)
-        print(type(token))
         return Response({'token':token.key})
 
 class Login(APIView):
