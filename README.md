@@ -60,6 +60,8 @@ todo task endpoints
 * [Python](https://www.python.org/) Python is an interpreted, high-level, general-purpose programming language.
 * [Postman](https://www.postman.com/) Postman is a collaboration platform for API development. Postman's features simplify each step of building an API and streamline collaboration so you can create better APIs—faster.
 
-### Author
+### Current Comtributors
 
-* **[Career Craft Contributors](https://github.com/careercraftuz/TodoList/graphs/contributors)**
+<a href="https://github.com/careercraftuz/TodoList/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=careercraftuz/TodoList"/>
+</a>

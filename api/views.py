@@ -3,12 +3,11 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
-from rest_framework.authentication import TokenAuthentication
-
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
 from .models import Task
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.hashers import make_password
 
 @api_view(["GET"])
 def get_all_tasks(request:Request):
@@ -107,28 +106,18 @@ def create_token(requset:Request):
         user = User.objects.create(username=username,password=make_password(password))
         token = Token.objects.create(user = user)
         return Response({'token':token.key})
-    
 
-class LoginUser(APIView):
-    authentication_classes = [TokenAuthentication,]
-    def post(self, request: Request) -> Response:
+class Login(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request:Request):
         user = request.user
-        if user:
-            token = Token.objects.filter(user=user)
-            if token is not None:
-                token.delete()
+        token_filter =  Token.objects.filter(user = user)
+        if token_filter:
+            token_filter.delete()
+            token = Token.objects.create(user = user)
+        else:
+            user = request.user
             token = Token.objects.create(user=user)
-            return Response({"token": token.key}, status=status.HTTP_200_OK)
 
-
-
-
-
-
-
-
-
-
-
-
-
+        return Response({"token":token.key})
