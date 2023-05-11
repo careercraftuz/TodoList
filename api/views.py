@@ -30,23 +30,22 @@ class UserTasks(APIView):
         return Response(result)
 
 
+class TaskDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
-@api_view(['GET'])
-def get_task(request, id:int):
-    if request.method == 'GET':
-        try:
-            task=Task.objects.get(id=id)
-            result={
-                'id':task.id,
-                'name':task.name,
-                'description':task.description,
-                'status':task.status,
-                'created':task.created,
-                'updated':task.updated
-            }
-            return Response(result)
-        except:
-            return Response({'result':'Task not found'})
+    def get(self, request: Request, id) -> Response:
+        task = Task.objects.filter(id=id, user=request.user)
+        if task:
+            return Response({
+                'id': task.id,
+                'name': task.name,
+                'description': task.description,
+                'status': task.status,
+                'created': task.created,
+                'updated': task.updated
+            })
+        return Response({"Error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
