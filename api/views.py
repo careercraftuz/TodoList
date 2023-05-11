@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view,permission_classes,authentication_classes
+from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
@@ -70,7 +70,7 @@ class UserCreateTask(APIView):
             object=Task.objects.create(
                 name=task['name'],
                 description=task['description'],
-                status=task['status']
+                status=task['status'],
                 user=user
             )
             object.save()
@@ -109,7 +109,6 @@ def create_token(requset:Request):
     if User.objects.filter(username = username):
         return Response({"return":"Such a user exists"})
     else:
-
         user = User.objects.create(username=username,password=make_password(password))
         token = Token.objects.create(user = user)
         return Response({'token':token.key})
@@ -128,3 +127,15 @@ class Login(APIView):
             token = Token.objects.create(user=user)
 
         return Response({"token":token.key})
+    
+
+class Logout(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request: Request) -> Response:
+        token = request.auth
+        token.delete()
+        return Response({"Status": "Deleted succesfully"})
+    
+
