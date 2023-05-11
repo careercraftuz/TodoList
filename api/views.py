@@ -14,6 +14,7 @@ from django.contrib.auth.hashers import make_password
 class UserTasks(APIView):
     #Added Tokenauthorization
     authentication_classes = [TokenAuthentication]
+    
     def get(self, request):
         user=request.user
         tasks=Task.objects.filter(user=user)
@@ -35,8 +36,8 @@ class TaskDetailView(APIView):
     authentication_classes = [TokenAuthentication]
 
     def get(self, request: Request, id) -> Response:
-        task = Task.objects.filter(id=id, user=request.user)
-        if task:
+        try: 
+            task = Task.objects.get(id=id, user=request.user)
             return Response({
                 'id': task.id,
                 'name': task.name,
@@ -45,7 +46,8 @@ class TaskDetailView(APIView):
                 'created': task.created,
                 'updated': task.updated
             })
-        return Response({"Error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+        except:
+            return Response({"Error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -58,7 +60,6 @@ def delete_task(request, id:int):
         except:
             return Response({'result':'Task not found'})
         
-
 
 class UserCreateTask(APIView):
     authentication_classes = [TokenAuthentication]
@@ -78,26 +79,22 @@ class UserCreateTask(APIView):
             return Response({'result':f'bad request {e}'},status=status.HTTP_400_BAD_REQUEST)
 
 
+class UpdateTasks(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
-@api_view(['POST'])
-def update_task(request,id:int):
-    if request.method == 'POST':
+    def post(self, request: Request, id) -> Response:
         try:
-            task = Task.objects.get(id=id)
-            try:
-                data=request.data
-                task.name = data.get('name',task.name)
-                task.description = data.get('description',task.description)
-                task.status = data.get('status',task.status)
-
+            task = Task.objects.get(id=id, user=request.user)
+            data = request.data
+            if task:
+                task.name = data.get('name', task.name)
+                task.description = data.get('description', task.description)
+                task.status = data.get('status', task.status)
                 task.save()
-                return Response({'result':'Task updated'},status=status.HTTP_200_OK)
-            except Exception as e:
-                return Response({'result':f'Bad request {e}'},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"Status": "Updated"}, status=status.HTTP_206_PARTIAL_CONTENT)
         except:
-            return Response({'result':'Not found task'},status=status.HTTP_404_NOT_FOUND)
-    else:
-        return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response({"Status": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -111,6 +108,7 @@ def create_token(requset:Request):
         user = User.objects.create(username=username,password=make_password(password))
         token = Token.objects.create(user = user)
         return Response({'token':token.key})
+
 
 class Login(APIView):
     permission_classes = [IsAuthenticated]
@@ -135,6 +133,6 @@ class Logout(APIView):
     def post(self, request: Request) -> Response:
         token = request.auth
         token.delete()
-        return Response({"Status": "Deleted succesfully"})
+        return Response({"Status": "Logout succesfully"})
     
 
