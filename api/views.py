@@ -2,12 +2,29 @@ from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import response,request
 from django.contrib import auth
 from rest_framework.decorators import APIView
+from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.hashers import make_password
+from rest_framework.authentication import TokenAuthentication
 from .models import Task
 
+@api_view(['POST'])
+def create_token(requset:Request):
+    data = requset.data
+    print(data)
+    username = data.get('user_name')
+    password = data.get('password')
+    
+    if User.objects.filter(username = username):
+        return Response({"return":"Such a user exists"})
+    else:
 
+        user = User.objects.create(username=username,password=make_password(password))
+        token = Token.objects.create(user = user)
+        return Response({'token':token.key})
 @api_view(["GET"])
 def get_all_tasks(request:Request):
     if request.method == "GET":
@@ -101,6 +118,18 @@ class LoginUser(APIView):
             create_token=Token.objects.create(user=user)
             return Response({"new_token":create_token.key},status=status.HTTP_201_CREATED)
         return Response({"Token":"Token is ceated for user"})
+class Logoutuser(APIView):
+    permissions_classes =[TokenAuthentication]
+    def delete(self,request:Request)->Response:
+        user=request.user
+        if user:
+            token = Token.objects.filter(user=user)
+            token.delete()
+            
+            data={
+                "result":"you logged out"
+            }
+            return Response(data=data, status=status.HTTP_200_OK)
 
 
 
