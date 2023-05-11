@@ -1,14 +1,22 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes,authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from django.contrib.auth.models import User
 from .models import Task
-
-
-@api_view(["GET"])
-def get_all_tasks(request:Request):
-    if request.method == "GET":
-        tasks=Task.objects.all()
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+#import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication
+from django.contrib.auth.hashers import make_password
+    
+class UserTasks(APIView):
+    #Added Tokenauthorization
+    authentication_classes = [TokenAuthentication]
+    def get(self, request):
+        user=request.user
+        tasks=Task.objects.filter(user=user)
         result={'result':[]}
         for task in tasks:
             result['result'].append({
@@ -20,8 +28,7 @@ def get_all_tasks(request:Request):
                 'updated':task.updated
             })
         return Response(result)
-    else:
-        return Response({'result':'Wrong method'})
+
 
 
 @api_view(['GET'])
@@ -91,3 +98,30 @@ def update_task(request,id:int):
         return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+@api_view(['POST'])
+def create_token(requset:Request):
+    data = requset.data
+    username = data.get('username')
+    password = data.get('password')
+    if User.objects.filter(username = username):
+        return Response({"return":"Such a user exists"})
+    else:
+
+        user = User.objects.create(username=username,password=make_password(password))
+        token = Token.objects.create(user = user)
+        return Response({'token':token.key})
+
+class Login(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request:Request):
+        user = request.user
+        token_filter =  Token.objects.filter(user = user)
+        if token_filter:
+            token_filter.delete()
+            token = Token.objects.create(user = user)
+        else:
+            user = request.user
+            token = Token.objects.create(user=user)
+
+        return Response({"token":token.key})

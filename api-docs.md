@@ -1,5 +1,72 @@
 ## API Documentation Details
 
+### user authentication endpoints
+
+#### POST /api/login/
+
+Use this to login a user. Returns API token.
+
+#### Request
+
+request body:
+
+```json
+{
+    "username": "username",
+    "password": "password"
+}
+```
+
+#### Response
+
+response data
+
+```
+{
+    "token": "token"
+}
+```
+
+#### POST /api/logout/
+
+Use this to logout a user. Returns a success message.
+
+#### Request
+
+```
+Authorization: Token <token>
+```
+
+#### Response
+
+```json
+{
+    "result": "Logout successful"
+}
+```
+
+#### POST /api/register/
+
+Use this to register a user. Returns a [User](types.md#user) object.
+
+#### Request
+
+request body:
+
+```json
+{
+    "username": "username",
+    "password": "password"
+}
+```
+
+request body attributes:
+
+| Attribute | Type | Required | Description |
+| --- | --- | --- | --- |
+| username | string | yes | user username (max length: 150) |
+| password | string | yes | user password (max length: 128) |
+
 ### GET /api/tasks/
 
 Use this to get all todo tasks. Returns a list of [Task](types.md#task) object.
