@@ -1,10 +1,16 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes,authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from django.contrib.auth.models import User
 from .models import Task
-
-
+from rest_framework.authtoken.models import Token
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.hashers import make_password
+import base64
+permission_classes = ([IsAuthenticated])
 @api_view(["GET"])
 def get_all_tasks(request:Request):
     if request.method == "GET":
@@ -29,7 +35,7 @@ def get_task(request, id:int):
     if request.method == 'GET':
         try:
             task=Task.objects.get(id=id)
-            return {
+            result={
                 'id':task.id,
                 'name':task.name,
                 'description':task.description,
@@ -37,13 +43,14 @@ def get_task(request, id:int):
                 'created':task.created,
                 'updated':task.updated
             }
+            return Response(result)
         except:
             return Response({'result':'Task not found'})
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def delete_task(request, id:int):
-    if request.method == 'GET':
+    if request.method == 'POST':
         try:
             task=Task.objects.get(id=id)
             task.delete()
@@ -77,6 +84,11 @@ def update_task(request,id:int):
                 task.name=data.get('name',task.name)
                 task.description=data.get('description',task.description)
                 task.status=data.get('status',task.status)
+                task.name = data.get('name',task.name)
+                task.description = data.get('description',task.description)
+                task.status = data.get('status',task.status)
+
+
                 task.save()
                 return Response({'result':'Task updated'},status=status.HTTP_200_OK)
             except Exception as e:
@@ -85,3 +97,35 @@ def update_task(request,id:int):
             return Response({'result':'Not found task'},status=status.HTTP_404_NOT_FOUND)
     else:
         return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response({'result':'Wrong method'},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['POST'])
+def create_token(requset:Request):
+    data = requset.data
+    username = data.get('username')
+    password = data.get('password')
+    if User.objects.filter(username = username):
+        return Response({"return":"Such a user exists"})
+    else:
+
+        user = User.objects.create(username=username,password=make_password(password))
+        token = Token.objects.create(user = user)
+        print(type(token))
+        return Response({'token':token.key})
+
+class Login(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request:Request):
+        user = request.user
+        token_filter =  Token.objects.filter(user = user)
+        if token_filter:
+            token_filter.delete()
+            token = Token.objects.create(user = user)
+        else:
+            user = request.user
+            token = Token.objects.create(user=user)
+
+        return Response({"token":token.key})
+
